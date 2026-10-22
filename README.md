@@ -15,6 +15,23 @@ Designed to model cross-domain security controls for naval surface and submarine
 
 ---
 
+## Local Development & Testing
+1. Build and start container server: `docker compose up --build -d`
+2. Test an authorized transfer for Low-to-High flow:
+   `curl -i -X POST http://localhost:8000/api/v1/transfer \
+     -H "Content-Type: application/json" \
+     -H "x-api-key: key-user-unclass" \
+     -d '{"destination_domain": "SECRET", "classification": "UNCLASS", "content": "System Telemetry"}'`
+   Expected Results: HTTP/1.1 200 OK
+4. Test a prohibited transfer: 
+   `curl -i -X POST http://localhost:8000/api/v1/transfer \
+     -H "Content-Type: application/json" \
+     -H "x-api-key: key-user-secret" \
+     -d '{"destination_domain": "UNCLASS", "classification": "SECRET", "content": "Classified Log"}'`
+   Expected Results: HTTP/1.1 400 Bad Request
+   
+---
+
 ## Architecture & Data Flow
 
 ```text
